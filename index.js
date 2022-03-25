@@ -28,7 +28,27 @@ async function run() {
             res.send(result)
         });
 
-       
+        app.get('/bitcoins', async (req, res) => {
+            const bitcoins = bitcoinCollection.find({});
+            const result = await bitcoins.toArray();
+            res.json(result);
+        });
+        app.get('/current', async (req, res) => {
+            const bitcoins = bitcoinCollection.find({});
+            const count = await database.collection('bitcoin').countDocuments();
+            const result = await bitcoins.skip(count-1).toArray();
+            res.json(result);
+        })
+        app.get('/max', async (req, res) => {
+            const bitcoins = bitcoinCollection.find().sort({price: -1}).limit(1);
+            const result = await bitcoins.toArray();
+            res.json(result);
+        });
+        app.get('/min', async (req, res) => {
+            const bitcoins = bitcoinCollection.find().sort({price: +1}).limit(1);
+            const result = await bitcoins.toArray();
+            res.json(result);
+        });
 
     } finally {
         // await client.close();
